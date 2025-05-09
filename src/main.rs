@@ -2,6 +2,7 @@ use std::fs;
 
 use lexer::LexingMachine;
 
+mod ast;
 mod lexer;
 
 fn main() {
