@@ -4,6 +4,7 @@ use lexer::LexingMachine;
 
 mod ast;
 mod lexer;
+mod parser;
 
 fn main() {
     let raw_string = fs::read_to_string("./willcode.ws").expect("Could not find file");
