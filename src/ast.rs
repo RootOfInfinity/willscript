@@ -25,6 +25,7 @@ pub enum Statement {
     Assign(Assignment),
     If(IfBlock),
     Call(ExprAST),
+    Built(BuiltIn),
 }
 
 #[derive(Clone, Debug)]
@@ -38,4 +39,12 @@ pub struct Assignment {
 pub struct IfBlock {
     conditional: ExprAST,
     body: Vec<Assignment>,
+}
+
+#[derive(Clone, Debug)]
+pub enum BuiltIn {
+    Print(ExprAST),
+    // these two are only with variables
+    Input(ExprAST),
+    Drop(ExprAST),
 }
