@@ -13,11 +13,21 @@ pub struct FunctionAST {
     proto: PrototypeAST,
     body: Vec<Statement>,
 }
+impl FunctionAST {
+    pub fn new(proto: PrototypeAST, body: Vec<Statement>) -> Self {
+        FunctionAST { proto, body }
+    }
+}
 
 #[derive(Clone, Debug)]
 pub struct PrototypeAST {
     name: String,
     args: Vec<String>,
+}
+impl PrototypeAST {
+    pub fn new(name: String, args: Vec<String>) -> Self {
+        PrototypeAST { name, args }
+    }
 }
 
 #[derive(Clone, Debug)]
@@ -34,16 +44,31 @@ pub struct Assignment {
     variable: ExprAST,
     right_hand: ExprAST,
 }
+impl Assignment {
+    pub fn new(is_declaration: bool, variable: ExprAST, right_hand: ExprAST) -> Self {
+        Assignment {
+            is_declaration,
+            variable,
+            right_hand,
+        }
+    }
+}
 
 #[derive(Clone, Debug)]
 pub struct IfBlock {
     conditional: ExprAST,
-    body: Vec<Assignment>,
+    body: Vec<Statement>,
+}
+impl IfBlock {
+    pub fn new(conditional: ExprAST, body: Vec<Statement>) -> Self {
+        IfBlock { conditional, body }
+    }
 }
 
 #[derive(Clone, Debug)]
 pub enum BuiltIn {
     Print(ExprAST),
+    Return(ExprAST),
     // these two are only with variables
     Input(ExprAST),
     Drop(ExprAST),

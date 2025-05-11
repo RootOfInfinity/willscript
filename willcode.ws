@@ -1,5 +1,5 @@
 fun fib(x) {
-	if (x < 2) {
+	if x < 2 {
 		return 1;
 	}
 
@@ -8,12 +8,11 @@ fun fib(x) {
 }
 
 fun loop(x) {
-	if (x > 1000) {
+	if x > 1000 {
 		return fib(x);
 	}
 	var cool = fib(x);
-	var cooler = loop(x+1);
-	return cooler;
+	return loop(x+1);
 }
 
 fun main() {

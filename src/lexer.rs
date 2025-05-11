@@ -90,6 +90,8 @@ impl<'a> LexingMachine<'a> {
                 "fun" => Token::Fun,
                 "return" => Token::Return,
                 "print" => Token::Print,
+                "input" => Token::Input,
+                "drop" => Token::Drop,
                 x => Token::Identifier(x.to_owned()),
             };
         }
@@ -220,6 +222,8 @@ pub enum Token {
     Comma,
     EndOfFile,
     Print,
+    Input,
+    Drop,
 }
 
 #[derive(Clone, Debug)]

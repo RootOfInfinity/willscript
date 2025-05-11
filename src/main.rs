@@ -1,6 +1,7 @@
 use std::fs;
 
 use lexer::LexingMachine;
+use parser::ParsingMachine;
 
 mod ast;
 mod lexer;
@@ -14,7 +15,22 @@ fn main() {
         .expect("Come on, you gotta have at least one character, right?");
     let mut awesome_lexing_machine = LexingMachine::new(cur_char, file_iter);
     let tokvec = awesome_lexing_machine.activate_lexing();
-    for val in tokvec {
+    for val in tokvec.iter() {
+        println!("{:#?}", val);
+    }
+    let mut tok_iter = tokvec.into_iter().peekable();
+    let cur_tok = tok_iter
+        .next()
+        .expect("Come on, you gotta have at least one token, right?");
+    let mut amazing_parsing_machine = ParsingMachine::new(cur_tok, tok_iter);
+    let ast_vec = match amazing_parsing_machine.activate_parsing_machine() {
+        Ok(x) => x,
+        Err(e) => {
+            eprintln!("{}", e);
+            panic!()
+        }
+    };
+    for val in ast_vec {
         println!("{:#?}", val);
     }
 }
