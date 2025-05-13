@@ -10,8 +10,8 @@ pub enum ExprAST {
 
 #[derive(Clone, Debug)]
 pub struct FunctionAST {
-    proto: PrototypeAST,
-    body: Vec<Statement>,
+    pub proto: PrototypeAST,
+    pub body: Vec<Statement>,
 }
 impl FunctionAST {
     pub fn new(proto: PrototypeAST, body: Vec<Statement>) -> Self {
@@ -21,8 +21,8 @@ impl FunctionAST {
 
 #[derive(Clone, Debug)]
 pub struct PrototypeAST {
-    name: String,
-    args: Vec<String>,
+    pub name: String,
+    pub args: Vec<String>,
 }
 impl PrototypeAST {
     pub fn new(name: String, args: Vec<String>) -> Self {
@@ -40,9 +40,9 @@ pub enum Statement {
 
 #[derive(Clone, Debug)]
 pub struct Assignment {
-    is_declaration: bool,
-    variable: ExprAST,
-    right_hand: ExprAST,
+    pub is_declaration: bool,
+    pub variable: ExprAST,
+    pub right_hand: ExprAST,
 }
 impl Assignment {
     pub fn new(is_declaration: bool, variable: ExprAST, right_hand: ExprAST) -> Self {

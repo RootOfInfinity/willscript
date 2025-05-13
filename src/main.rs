@@ -4,6 +4,7 @@ use lexer::LexingMachine;
 use parser::ParsingMachine;
 
 mod ast;
+mod interpreter;
 mod lexer;
 mod parser;
 
@@ -30,6 +31,7 @@ fn main() {
             panic!()
         }
     };
+    println!("\n[[START OF AST]]\n");
     for val in ast_vec {
         println!("{:#?}", val);
     }
