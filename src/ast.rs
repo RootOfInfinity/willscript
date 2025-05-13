@@ -56,8 +56,8 @@ impl Assignment {
 
 #[derive(Clone, Debug)]
 pub struct IfBlock {
-    conditional: ExprAST,
-    body: Vec<Statement>,
+    pub conditional: ExprAST,
+    pub body: Vec<Statement>,
 }
 impl IfBlock {
     pub fn new(conditional: ExprAST, body: Vec<Statement>) -> Self {
