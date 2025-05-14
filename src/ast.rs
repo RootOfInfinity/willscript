@@ -34,6 +34,7 @@ impl PrototypeAST {
 pub enum Statement {
     Assign(Assignment),
     If(IfBlock),
+    While(WhileBlock),
     Call(ExprAST),
     Built(BuiltIn),
 }
@@ -62,6 +63,17 @@ pub struct IfBlock {
 impl IfBlock {
     pub fn new(conditional: ExprAST, body: Vec<Statement>) -> Self {
         IfBlock { conditional, body }
+    }
+}
+
+#[derive(Clone, Debug)]
+pub struct WhileBlock {
+    pub conditional: ExprAST,
+    pub body: Vec<Statement>,
+}
+impl WhileBlock {
+    pub fn new(conditional: ExprAST, body: Vec<Statement>) -> Self {
+        WhileBlock { conditional, body }
     }
 }
 

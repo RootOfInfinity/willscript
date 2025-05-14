@@ -1,11 +1,7 @@
-use std::{
-    collections::HashMap,
-    env::{Args, ArgsOs},
-    io,
-};
+use std::{collections::HashMap, io};
 
 use crate::{
-    ast::{Assignment, BuiltIn, ExprAST, FunctionAST, IfBlock, Statement},
+    ast::{Assignment, BuiltIn, ExprAST, FunctionAST, IfBlock, Statement, WhileBlock},
     lexer::Operator,
 };
 
@@ -64,6 +60,11 @@ impl InterpretingMastermind {
                     return Some(x);
                 }
             }
+            Statement::While(x) => {
+                if let Some(x) = self.run_while_block(x, varmap) {
+                    return Some(x);
+                }
+            }
             Statement::Built(BuiltIn::Return(x)) => return Some(self.eval_expr(x, varmap)),
             Statement::Built(x) => self.run_built(x, varmap),
         }
@@ -94,6 +95,20 @@ impl InterpretingMastermind {
     ) -> Option<i32> {
         if self.eval_expr(&if_block.conditional, varmap) != 0 {
             for statement in if_block.body.iter() {
+                if let Some(x) = self.run_statement(&statement, varmap) {
+                    return Some(x);
+                }
+            }
+        }
+        None
+    }
+    fn run_while_block(
+        &mut self,
+        while_block: &WhileBlock,
+        varmap: &mut HashMap<String, i32>,
+    ) -> Option<i32> {
+        while self.eval_expr(&while_block.conditional, varmap) != 0 {
+            for statement in while_block.body.iter() {
                 if let Some(x) = self.run_statement(&statement, varmap) {
                     return Some(x);
                 }

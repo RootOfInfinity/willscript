@@ -1,5 +1,6 @@
 use std::fs;
 
+use interpreter::InterpretingMastermind;
 use lexer::LexingMachine;
 use parser::ParsingMachine;
 
@@ -16,9 +17,9 @@ fn main() {
         .expect("Come on, you gotta have at least one character, right?");
     let mut awesome_lexing_machine = LexingMachine::new(cur_char, file_iter);
     let tokvec = awesome_lexing_machine.activate_lexing();
-    for val in tokvec.iter() {
-        println!("{:#?}", val);
-    }
+    // for val in tokvec.iter() {
+    //     println!("{:#?}", val);
+    // }
     let mut tok_iter = tokvec.into_iter().peekable();
     let cur_tok = tok_iter
         .next()
@@ -31,8 +32,11 @@ fn main() {
             panic!()
         }
     };
-    println!("\n[[START OF AST]]\n");
-    for val in ast_vec {
-        println!("{:#?}", val);
-    }
+    // println!("\n[[START OF AST]]\n");
+    // for val in ast_vec.iter() {
+    //     println!("{:#?}", val);
+    // }
+    // println!("\n[[END OF AST]]\n");
+    let mut fantastic_interpreting_machine = InterpretingMastermind::new(ast_vec);
+    fantastic_interpreting_machine.run_main();
 }

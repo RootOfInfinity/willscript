@@ -8,7 +8,7 @@ fun fib(x) {
 }
 
 fun loop(x) {
-	if x > 1000 {
+	if x > 10 {
 		return fib(x);
 	}
 	var cool = fib(x);
@@ -16,7 +16,23 @@ fun loop(x) {
 }
 
 fun main() {
-	var ans = loop(0);
+	var ans = bestestLoop(1000000000);
 	print ans;
 	return 0;
+}
+
+fun bestestLoop(repeats) {
+	var i = 0;
+	while i < repeats {
+		print i;
+		i = i + 1;
+	}
+}
+
+fun coolerLoop(number) {
+	if number > 1000000000 {
+		return number;
+	}
+	print number;
+	return coolerLoop(number + 1);
 }

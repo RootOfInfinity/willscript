@@ -1,5 +1,7 @@
 use crate::{
-    ast::{Assignment, BuiltIn, ExprAST, FunctionAST, IfBlock, PrototypeAST, Statement},
+    ast::{
+        Assignment, BuiltIn, ExprAST, FunctionAST, IfBlock, PrototypeAST, Statement, WhileBlock,
+    },
     lexer::{Operator, Token},
 };
 use std::{iter::Peekable, vec::IntoIter};
@@ -77,7 +79,7 @@ impl ParsingMachine {
                 Some(&Token::LeftParen) => self.parse_call(),
                 _ => Ok(Statement::Assign(self.parse_assignment()?)),
             },
-            Token::If => Ok(Statement::If(self.parse_ifblock()?)),
+            Token::If | Token::While => Ok(self.parse_block()?),
             Token::Print | Token::Input | Token::Drop | Token::Return => {
                 Ok(Statement::Built(self.parse_builtin()?))
             }
@@ -142,18 +144,25 @@ impl ParsingMachine {
             x => Err(format!("Expected print, input, or drop, got: {:#?}", x)),
         }
     }
-    fn parse_ifblock(&mut self) -> Result<IfBlock, String> {
-        let Token::If = self.cur_tok else {
-            return Err("Could not find 'if'".to_owned());
-        };
-        self.eat_tok(); //eat the 'if'
+    fn parse_block(&mut self) -> Result<Statement, String> {
+        let is_if;
+        match self.cur_tok {
+            Token::If => is_if = true,
+            Token::While => is_if = false,
+            _ => return Err("Could not find 'if' or 'while'".to_owned()),
+        }
+        self.eat_tok(); //eat the 'if' or 'while'
         let conditional = self.parse_expr()?;
         let Token::LeftCurly = self.cur_tok else {
-            return Err("Could not find '{' required for if block.".to_owned());
+            return Err("Could not find '{' required for block.".to_owned());
         };
         let statements = self.collect_statements()?;
         // we dont need to check for right curly, collect statements already does that.
-        Ok(IfBlock::new(conditional, statements))
+        if is_if {
+            Ok(Statement::If(IfBlock::new(conditional, statements)))
+        } else {
+            Ok(Statement::While(WhileBlock::new(conditional, statements)))
+        }
     }
     fn parse_call(&mut self) -> Result<Statement, String> {
         let expr = self.parse_expr()?;

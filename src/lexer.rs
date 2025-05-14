@@ -92,6 +92,7 @@ impl<'a> LexingMachine<'a> {
                 "print" => Token::Print,
                 "input" => Token::Input,
                 "drop" => Token::Drop,
+                "while" => Token::While,
                 x => Token::Identifier(x.to_owned()),
             };
         }
@@ -217,6 +218,7 @@ pub enum Token {
     Op(Operator),
     Return,
     If,
+    While,
     Assignment,
     Semicolon,
     Comma,
