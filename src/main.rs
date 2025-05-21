@@ -10,7 +10,7 @@ mod lexer;
 mod parser;
 
 fn main() {
-    let raw_string = fs::read_to_string("./willcode.ws").expect("Could not find file");
+    let raw_string = fs::read_to_string("./hello_world.ws").expect("Could not find file");
     let mut file_iter = raw_string.chars();
     let cur_char = file_iter
         .next()

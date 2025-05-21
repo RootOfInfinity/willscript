@@ -3,9 +3,15 @@ use crate::lexer::Operator;
 #[derive(Clone, Debug)]
 pub enum ExprAST {
     Variable(String),
-    Number(i32),
+    Val(Value),
     BinOp(Operator, Box<ExprAST>, Box<ExprAST>),
     Call(String, Vec<ExprAST>),
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
+pub enum Value {
+    Str(String),
+    Int(i32),
 }
 
 #[derive(Clone, Debug)]

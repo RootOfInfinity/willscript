@@ -62,12 +62,19 @@ impl<'a> LexingMachine<'a> {
             '+' => true,
             '-' => true,
             '*' => true,
+            '/' => true,
             _ => false,
         }
     }
     fn get_token(&mut self) -> Token {
         if self.lexing_finished {
             return Token::EndOfFile;
+        }
+        if self.cur_char == '#' {
+            while self.cur_char != '\n' {
+                self.eat_char();
+            }
+            self.eat_char();
         }
         while self.cur_char.is_ascii_whitespace() {
             if self.lexing_finished {
@@ -76,6 +83,18 @@ impl<'a> LexingMachine<'a> {
             self.eat_char();
         }
         //Whitespace done
+        if self.cur_char == '"' {
+            self.eat_char();
+            //eat "
+            let mut string_str = String::new();
+            string_str.push(' ');
+            while self.cur_char != '"' || string_str[string_str.len() - 1..] == *"\\" {
+                string_str.push(self.cur_char);
+                self.eat_char();
+            }
+            self.eat_char();
+            return Token::Str(string_str[1..].to_owned());
+        }
         if self.cur_is_alpha(true) {
             let mut ident_str = String::new();
             ident_str.push(self.cur_char);
@@ -93,6 +112,8 @@ impl<'a> LexingMachine<'a> {
                 "input" => Token::Input,
                 "drop" => Token::Drop,
                 "while" => Token::While,
+                "true" => Token::Number(1),
+                "false" => Token::Number(0),
                 x => Token::Identifier(x.to_owned()),
             };
         }
@@ -183,6 +204,9 @@ impl<'a> LexingMachine<'a> {
             } else if self.cur_char == '*' {
                 self.eat_char();
                 return Token::Op(Operator::Mult);
+            } else if self.cur_char == '/' {
+                self.eat_char();
+                return Token::Op(Operator::Div);
             } else {
                 unreachable!();
             }
@@ -198,7 +222,14 @@ impl<'a> LexingMachine<'a> {
             '}' => Token::RightCurly,
             ',' => Token::Comma,
             ';' => Token::Semicolon,
-            _ => panic!("unexpected char (are you only using ASCII?)"),
+            '#' => {
+                self.cur_char = '#';
+                self.get_token()
+            }
+            x => {
+                eprintln!("{x}");
+                panic!("unexpected char (are you only using ASCII");
+            }
         };
         //Nice clean ending, with all the other chars.
     }
@@ -209,6 +240,7 @@ pub enum Token {
     // Add more when the time comes
     Identifier(String),
     Number(i32),
+    Str(String),
     Var,
     Fun,
     LeftParen,
@@ -248,4 +280,5 @@ pub enum Operator {
     Add,
     Sub,
     Mult,
+    Div,
 }
