@@ -1,6 +1,7 @@
 use crate::{
     ast::{
-        Assignment, BuiltIn, ExprAST, FunctionAST, IfBlock, PrototypeAST, Statement, WhileBlock,
+        Assignment, BuiltIn, ExprAST, FunctionAST, IfBlock, PrototypeAST, Statement, Value,
+        WhileBlock,
     },
     lexer::{Operator, Token},
 };
@@ -249,12 +250,19 @@ impl ParsingMachine {
         }
         Ok(ExprAST::Variable(ident_string))
     }
+    fn parse_str(&mut self) -> Result<ExprAST, String> {
+        let Token::Str(string) = self.cur_tok.clone() else {
+            return Err("Parse str did not get a string.".to_owned());
+        };
+        self.eat_tok();
+        Ok(ExprAST::Val(Value::Str(string)))
+    }
     fn parse_num(&mut self) -> Result<ExprAST, String> {
         let Token::Number(num) = self.cur_tok else {
             return Err("Parse Num did not get a number.".to_owned());
         };
         self.eat_tok();
-        Ok(ExprAST::Number(num))
+        Ok(ExprAST::Val(Value::Int(num)))
     }
     fn parse_paren(&mut self) -> Result<ExprAST, String> {
         let Token::LeftParen = self.cur_tok else {
@@ -272,6 +280,7 @@ impl ParsingMachine {
         match &self.cur_tok {
             Token::Identifier(_) => self.parse_ident(),
             Token::Number(_) => self.parse_num(),
+            Token::Str(_) => self.parse_str(),
             Token::LeftParen => self.parse_paren(),
             x => Err(format!("Bad Token given to parse primary: {:#?}", x)),
         }
@@ -283,6 +292,6 @@ fn get_priority(operator: &Operator) -> u32 {
         Operator::LEq | Operator::Ls | Operator::GEq | Operator::Gr | Operator::Eq => 20,
         Operator::BAnd | Operator::BOr | Operator::BXor => 30,
         Operator::Add | Operator::Sub => 40,
-        Operator::Mult => 50,
+        Operator::Mult | Operator::Div => 50,
     }
 }

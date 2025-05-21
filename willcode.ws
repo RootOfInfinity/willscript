@@ -16,8 +16,7 @@ fun loop(x) {
 }
 
 fun main() {
-	var ans = bestestLoop(1000000000);
-	print ans;
+	print "Hello World!";
 	return 0;
 }
 
